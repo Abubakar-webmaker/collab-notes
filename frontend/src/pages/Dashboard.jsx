@@ -12,7 +12,7 @@ export default function Dashboard() {
 
   const fetchNotes = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/notes', {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/notes`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setNotes(res.data);
@@ -24,7 +24,7 @@ export default function Dashboard() {
   const createNote = async () => {
     setCreating(true);
     try {
-      const res = await axios.post('http://localhost:5000/api/notes', {}, {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/notes`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       navigate(`/note/${res.data._id}`);
@@ -36,7 +36,7 @@ export default function Dashboard() {
   const deleteNote = async (id, e) => {
     e.stopPropagation();
     setNotes(prev => prev.filter(n => n._id !== id));
-    await axios.delete(`http://localhost:5000/api/notes/${id}`, {
+    await axios.delete(`${import.meta.env.VITE_API_URL}/api/notes/${id}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
   };
