@@ -12,14 +12,19 @@ const noteHandler = require('./socket/noteHandler');
 const app = express();
 const httpServer = http.createServer(app);
 
-const allowedOrigins = [
-  'https://collab-notes-p5zrs1trv-abubakar-webmakers-projects.vercel.app',
-  'http://localhost:5173'
-];
-
 const io = new Server(httpServer, {
   cors: {
-    origin: allowedOrigins,
+    origin: function(origin, callback) {
+      if (!origin) return callback(null, true);
+      if (
+        origin.includes('vercel.app') ||
+        origin === 'http://localhost:5173'
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error('CORS not allowed'));
+      }
+    },
     methods: ['GET', 'POST'],
     credentials: true
   }
@@ -27,7 +32,17 @@ const io = new Server(httpServer, {
 
 // Middleware
 app.use(cors({
-  origin: allowedOrigins,
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true);
+    if (
+      origin.includes('vercel.app') ||
+      origin === 'http://localhost:5173'
+    ) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS not allowed'));
+    }
+  },
   credentials: true
 }));
 app.use(express.json());
