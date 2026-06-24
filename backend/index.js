@@ -12,15 +12,24 @@ const noteHandler = require('./socket/noteHandler');
 const app = express();
 const httpServer = http.createServer(app);
 
+const allowedOrigins = [
+  'https://collab-notes-p5zrs1trv-abubakar-webmakers-projects.vercel.app',
+  'http://localhost:5173'
+];
+
 const io = new Server(httpServer, {
   cors: {
-    origin: 'http://localhost:5173', // React Vite port
-    methods: ['GET', 'POST']
+    origin: allowedOrigins,
+    methods: ['GET', 'POST'],
+    credentials: true
   }
 });
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
 app.use(express.json());
 
 // REST Routes
